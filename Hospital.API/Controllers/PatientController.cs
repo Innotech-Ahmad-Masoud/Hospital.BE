@@ -18,7 +18,7 @@ namespace Hospital.API.Controllers
             _patientService = patientService;
         }
 
-        [HttpPost(nameof(CreatePatient))]
+        [HttpPost(nameof(CreatePatient)), AllowAnonymous]
         [ProducesResponseType(typeof(Response<PatientResult>), StatusCodes.Status200OK)]
         public async Task<IActionResult> CreatePatient([FromBody] PatientModel model)
         {
@@ -31,7 +31,7 @@ namespace Hospital.API.Controllers
             };
         }
 
-        [HttpPatch(nameof(UpdatePatient))]
+        [HttpPost(nameof(UpdatePatient)), AllowAnonymous]
         [ProducesResponseType(typeof(Response<PatientResult>), StatusCodes.Status200OK)]
         public async Task<IActionResult> UpdatePatient([FromBody] PatientModel model)
         {
@@ -57,7 +57,20 @@ namespace Hospital.API.Controllers
             };
         }
 
-        [HttpPost(nameof(CreatePatientRecord))]
+        [HttpGet("GetPatient/{systemIdNumber:int}"), AllowAnonymous]
+        [ProducesResponseType(typeof(Response<PatientResult>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetPatient(int systemIdNumber)
+        {
+            var result = await _patientService.GetPatient(systemIdNumber);
+
+            return result.Status switch
+            {
+                nameof(HttpStatusCode.OK) => Ok(result),
+                _ => BadRequest(result.Message)
+            };
+        }
+
+        [HttpPost(nameof(CreatePatientRecord)), AllowAnonymous]
         [ProducesResponseType(typeof(Response<PatientRecordResult>), StatusCodes.Status200OK)]
         public async Task<IActionResult> CreatePatientRecord([FromBody] PatientRecordModel model)
         {

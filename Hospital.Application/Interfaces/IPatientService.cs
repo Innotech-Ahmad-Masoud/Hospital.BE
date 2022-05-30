@@ -8,6 +8,7 @@ namespace Hospital.Application.Interfaces
     public interface IPatientService
     {
         Task<PagedResponse<List<PatientResult>>> GetPatients(PatientParameter parameter);
+        Task<Response<PatientResult>> GetPatient(int systemIdNumber);
         Task<Response<PatientResult>> CreatePatient(PatientModel model);
         Task<Response<PatientResult>> UpdatePatient(PatientModel model);
         Task<Response<PatientRecordResult>> CreatePatientRecord(PatientRecordModel model);    

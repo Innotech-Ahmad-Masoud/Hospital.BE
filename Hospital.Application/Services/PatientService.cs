@@ -290,5 +290,41 @@ namespace Hospital.Application.Services
 
             return null;
         }
+
+        public async Task<Response<PatientResult>> GetPatient(int systemIdNumber)
+        {
+            try
+            {
+                var patient = await _dbContext.Patient.FirstOrDefaultAsync(c => c.SystemIdNumber == systemIdNumber);
+                if (patient == null)
+                    return new Response<PatientResult>()
+                    {
+                        Status = nameof(HttpStatusCode.NotFound),
+                        Message = $"There is no patient System Id Number '{systemIdNumber}'"
+                    };
+
+                return new Response<PatientResult>()
+                {
+                    Status = nameof(HttpStatusCode.OK),
+                    Message = "Patient",
+                    Data = new PatientResult()
+                    {
+                        SystemIdNumber = patient.SystemIdNumber,
+                        Name = patient.Name,
+                        DateOfBirth = patient.DateOfBirth,
+                        EmailAddress = patient.EmailAddress,
+                        OfficialIdNumber = patient.OfficialIdNumber
+                    }
+                };
+            }
+            catch (Exception ex)
+            {
+                return new Response<PatientResult>()
+                {
+                    Status = nameof(HttpStatusCode.BadRequest),
+                    Message = ex.Message
+                };
+            }
+        }
     }
 }
